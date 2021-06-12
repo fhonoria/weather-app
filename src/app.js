@@ -37,6 +37,21 @@ function DisplayWeatherCondition(response) {
   );
   document.querySelector("#description").innerHTML =
     response.data.weather[0].description;
+  document.querySelector("#humidity").innerHTML = response.data.main.humidity;
+  document.querySelector("#wind").innerHTML = response.data.wind.speed;
+
+  document
+    .querySelector("#weather-icon")
+    .setAttribute(
+      "src",
+      `http://openweathermap.org/img/wn/${response.data.weather[0].icon}@2x.png`
+    );
+  document
+    .querySelector("#weather-icon")
+    .setAttribute(
+      "alt",
+      `http://openweathermap.org/img/wn/${response.data.weather[0].description}@2x.png`
+    );
 }
 
 function searchCity(city) {
@@ -69,3 +84,5 @@ function getCurrentLocation(event) {
 
 let currentLocationButton = document.querySelector("#current-location-button");
 currentLocationButton.addEventListener("click", getCurrentLocation);
+
+//unit conversion
