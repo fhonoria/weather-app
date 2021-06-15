@@ -27,6 +27,8 @@ changeDay.innerHTML = currentDay;
 let changeTime = document.querySelector("#current-time");
 changeTime.innerHTML = currentHour + ":" + currentMinute;
 
+//search engine
+
 let apiKey = "9840a840dcb1e2ca4cd13597387da153";
 let unit = "metric";
 
@@ -54,6 +56,7 @@ function DisplayWeatherCondition(response) {
     );
 
   celsiusTemperature = Math.round(response.data.main.temp);
+  getForecast(response.data.coord);
 }
 
 function searchCity(city) {
@@ -112,3 +115,69 @@ fahrenheitLink.addEventListener("click", fahrenheitTemperatureDisplay);
 
 let celsiusLink = document.querySelector("#celsius-link");
 celsiusLink.addEventListener("click", celsiusTemperatureDisplay);
+
+//forecast
+
+function getForecast(coordinates) {
+  let apiUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${coordinates.lat}&lon=${coordinates.lon}&exclude={part}&appid=${apiKey}&units=${unit}`;
+  axios.get(apiUrl).then(displayForecast);
+}
+
+function formatForecastDay(timestamp) {
+  let date = new Date(timestamp * 1000);
+  let day = date.getDay();
+
+  let days = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
+
+  return days[day];
+}
+
+function displayForecast(response) {
+  console.log(response);
+  let forecastElement = document.querySelector("#forecast");
+  let forecastHTML = "";
+  forecastData = response.data.daily;
+
+  forecastData.forEach(function (forecast, index) {
+    if (index < 3) {
+      forecastHTML =
+        forecastHTML +
+        `<div class="row">
+            <div class="col-2">${formatForecastDay(forecast.dt)}</div>
+            <div class="col-3" id="forecast-weather-icon">
+              <img
+                src="http://openweathermap.org/img/wn/${
+                  forecast.weather[0].icon
+                }@2x.png"
+                alt=""
+                width="70"
+              />
+            </div>
+            <div class="col-3">
+              <span id="forecast-temp-max">${Math.round(
+                forecast.temp.max
+              )}</span
+              ><span id="forecast-unit">°C</span>
+              <span id="forecast-temp-min"
+                >${Math.round(
+                  forecast.temp.min
+                )}<span id="forecast-unit">°C</span>
+              </span>
+            </div>
+            <div class="col-4" id="description">${
+              forecast.weather[0].description
+            }</div>
+          </div>`;
+
+      forecastElement.innerHTML = forecastHTML;
+    }
+  });
+}
