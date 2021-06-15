@@ -1,37 +1,3 @@
-//Day & Time
-let now = new Date();
-
-let currentHour = now.getHours();
-if (currentHour < 10) {
-  currentHour = `0${currentHour}`;
-}
-let currentMinute = now.getMinutes();
-if (currentMinute < 10) {
-  currentMinute = `0${currentMinute}`;
-}
-
-let days = [
-  "Sunday",
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-];
-let currentDay = days[now.getDay()];
-
-let changeDay = document.querySelector("#current-day");
-changeDay.innerHTML = currentDay;
-
-let changeTime = document.querySelector("#current-time");
-changeTime.innerHTML = currentHour + ":" + currentMinute;
-
-//search engine
-
-let apiKey = "9840a840dcb1e2ca4cd13597387da153";
-let unit = "metric";
-
 function DisplayWeatherCondition(response) {
   document.querySelector("#city").innerHTML = response.data.name;
   document.querySelector("#degree").innerHTML = Math.round(
@@ -70,13 +36,6 @@ function handleSubmit(event) {
   searchCity(city);
 }
 
-let searchForm = document.querySelector("#submit-button");
-searchForm.addEventListener("click", handleSubmit);
-
-searchCity("Budapest");
-
-//current Button
-
 function searchLocation(position) {
   let apiUrlCurrent = `https://api.openweathermap.org/data/2.5/weather?lat=${position.coords.latitude}&lon=${position.coords.longitude}&units=${unit}&appid=${apiKey}`;
   axios.get(apiUrlCurrent).then(DisplayWeatherCondition);
@@ -86,11 +45,6 @@ function getCurrentLocation(event) {
   event.preventDefault();
   navigator.geolocation.getCurrentPosition(searchLocation);
 }
-
-let currentLocationButton = document.querySelector("#current-location-button");
-currentLocationButton.addEventListener("click", getCurrentLocation);
-
-//forecast
 
 function getForecast(coordinates) {
   let apiUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${coordinates.lat}&lon=${coordinates.lon}&exclude={part}&appid=${apiKey}&units=${unit}`;
@@ -155,3 +109,42 @@ function displayForecast(response) {
     }
   });
 }
+
+let apiKey = "9840a840dcb1e2ca4cd13597387da153";
+let unit = "metric";
+
+let searchForm = document.querySelector("#submit-button");
+searchForm.addEventListener("click", handleSubmit);
+
+let currentLocationButton = document.querySelector("#current-location-button");
+currentLocationButton.addEventListener("click", getCurrentLocation);
+
+let now = new Date();
+
+let currentHour = now.getHours();
+if (currentHour < 10) {
+  currentHour = `0${currentHour}`;
+}
+let currentMinute = now.getMinutes();
+if (currentMinute < 10) {
+  currentMinute = `0${currentMinute}`;
+}
+
+let days = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+];
+let currentDay = days[now.getDay()];
+
+let changeDay = document.querySelector("#current-day");
+changeDay.innerHTML = currentDay;
+
+let changeTime = document.querySelector("#current-time");
+changeTime.innerHTML = currentHour + ":" + currentMinute;
+
+searchCity("Budapest");
